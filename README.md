@@ -26,7 +26,7 @@ An ansible role to configure a Rocky linux host as a home/edge router.
 - DNS blocklist
 - fail2ban
 
-#### Core Variables (Dictonary)
+#### Core Variables (Dictionary)
 ```yaml
 rocky_router:
   # IP info
@@ -49,6 +49,12 @@ rocky_router:
   # DNF Automatic updates
   dnf_auto_timer: dnf-automatic-install.timer
   dnf_auto_frequency: "Sat *-*-* 00:00:00"
+  # Additional features
+  wan_ssh_enabled: false
+  wiregaurd_enabled: false
+  dns_blocklist_enabled: false
+  fail2ban_enabled: false
+  port_forwarding_enabled: false
 ```
 
 #### Additional Variables
@@ -67,4 +73,33 @@ rocky_router_ssh:
 # DNS Blocklist (TBD)
 
 # Fail2ban (TBD)
+
+# Port Forwarding (TBD)
 ```
+
+#### Sample playbook using the role
+```yaml
+---
+- name: Rocky Router
+  hosts: all
+  become: yes
+  vars_files:
+    - vars/sample.yml
+  tasks:
+    - name: Include rocky router role
+      ansible.builtin.include_role:
+        name: machinemonkeys.rocky_router
+    -
+```
+
+#### Foot Notes:
+
+- The default outcome should be a host configured as a local gateway, firewall, dhcp server, and dns server.
+- You can copy and paste the variable dictionaries and make changes to customize the configurations.
+- You can enable additional features by setting them in the main dictionary to true.
+- The LAN IP for the router will be used by the bridge interface defined. 
+- LAN facing network interfaces can be configured as bridge slaves to service clients/devices connected to them such as switches, access points, hosts etc.
+- In order to maximize the use of the machine, currently looking into the following features:
+  - qemu/kvm hypervisor
+  - IDS/IPS
+  - p2p node
