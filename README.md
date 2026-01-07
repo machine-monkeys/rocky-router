@@ -62,6 +62,7 @@ N/A
 Example Playbook
 ----------------
 
+```yaml
 ---
 - name: Rocky Router
   hosts: all
@@ -72,6 +73,7 @@ Example Playbook
     - name: Include rocky router role
       ansible.builtin.include_role:
         name: machinemonkeys.rocky_router
+```
 
 License
 -------
@@ -81,5 +83,6 @@ MIT
 Author Information
 ------------------
 
-Gino Curtis
-machinemonkeys.com
+_Gino Curtis_
+
+_machinemonkeys.com_
