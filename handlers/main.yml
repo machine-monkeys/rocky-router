@@ -9,3 +9,13 @@
   ansible.builtin.service:
     name: dnsmasq
     state: reloaded
+
+- name: LAN UP
+  community.general.nmcli:
+    conn_name: "{{ rocky_router_ifs.lan_bridge }}"
+    state: up
+
+- name: WAN UP
+  community.general.nmcli:
+    conn_name: "{{ rocky_router_ifs.wan }}"
+    state: up
