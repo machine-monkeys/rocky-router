@@ -15,7 +15,13 @@
     state: present
   notify: Reload firewall
 
-- name: Allow ssh to {{ rocky_router_fw.lan_zone }}
+- name: Setup bridge interface {{ rocky_router_ifs.lan_bridge }}
+
+- name: Setup bridge slave-interfaces 
+
+- name: Add bridge interface to zone {{ rocky_router_fw.lan_zone }}
+
+- name: Allow ssh in zone {{ rocky_router_fw.lan_zone }}
   ansible.posix.firewalld:
     zone: "{{ rocky_router_fw.lan_zone }}"
     service: ssh
@@ -23,10 +29,45 @@
     permanent: true
     state: enabled
 
-- name: Allow forward in {{ rocky_router_fw.lan_zone }}
+- name: Allow dhcp in zone {{ rocky_router_fw.lan_zone }}
+
+- name: Allow forward in zone {{ rocky_router_fw.lan_zone }}
   ansible.posix.firewalld:
     zone: "{{ rocky_router_fw.lan_zone }}"
     forward: true
     immediate: true
     permanent: true
     state: enabled
+
+- name: Add wan facing zone {{ rocky_router_fw.wan_zone }}
+
+- name: Setup wan interface {{ rocky_router_ifs.wan_zone }}
+
+- name: Add wan interface to zone {{ rocky_router_fw.wan_zone }}
+
+- name: Deny forward in zone {{ rocky_router_fw.wan_zone }}
+
+- name: Allow masquerade in zone {{ rocky_router_fw.wan_zone }}
+
+- name: Allow icmp blocks in zone {{ rocky_router_fw.wan_zone }}
+
+- name: Allow specified services in zone {{ rocky_router_fw.wan_zone }}
+
+- name: Check existing firewalld policies
+  ansible.builtin.command: firewall-cmd --get-policies
+  changed_when: false
+  register: fw_policies
+
+- name: Add zone-to-zone firewall policy {{ rocky_router_fw.policy }}
+
+- name: Set policy ingress zone {{ rocky_router_fw.lan_zone }}
+
+- name: Set policy egress zone {{ rocky_router_fw.wan_zone }}
+
+- name: Set policy target {{ rocky_router_fw.policy_target }}
+
+- name: Copy template for local dhcp server configurations
+
+- name: Set up log rotation for dnsmasq
+
+- name: Enable ipv4 forwarding
