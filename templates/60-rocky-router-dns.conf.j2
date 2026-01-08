@@ -3,7 +3,7 @@ local=/{{ rocky_router_dns.local_domain }}/
 dhcp-option=option:domain-name,{{ rocky_router_dns.local_domain }}
 dhcp-option=option:domain-search,{{ rocky_router_dns.local_domain }}
 
-{% for server in dns_servers %}
+{% for server in rocky_router_dns.servers %}
 server={{ server }}
 {% endfor %}
 
