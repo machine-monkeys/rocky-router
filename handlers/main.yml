@@ -4,3 +4,8 @@
 - name: Reload firewall
   ansible.builtin.command: firewall-cmd --reload
   changed_when: false
+
+- name: Reload dnsmasq
+  ansible.builtin.service:
+    name: dnsmasq
+    state: reloaded
