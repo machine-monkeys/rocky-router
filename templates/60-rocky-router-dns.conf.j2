@@ -1,0 +1,14 @@
+domain={{ rocky_router_dns.local_domain }}
+local=/{{ rocky_router_dns.local_domain }}/
+dhcp-option=option:domain-name,{{ rocky_router_dns.local_domain }}
+dhcp-option=option:domain-search,{{ rocky_router_dns.local_domain }}
+
+{% for server in dns_servers %}
+server={{ server }}
+{% endfor %}
+
+{% for directive in rocky_router_dns.directives %}
+{{ directive }}
+{% endfor %}
+
+

@@ -1,0 +1,15 @@
+listen-address={{ rocky_router_ip.addr }}
+interface={{ rocky_router_ifs.lan_bridge }}
+bind-interfaces
+
+dhcp-authoritative
+dhcp-range={{ rocky_router_dhcp.start_ip }},{{ rocky_router_dhcp.end_ip }},{{ rocky_router_dhcp.lease_time }}
+dhcp-leasefile={{ rocky_router_dhcp.lease_file }}
+
+dhcp-option=option:router,{{ rocky_router_ip.addr }}
+dhcp-option=option:dns-server,{{ rocky_router_dns.servers | join(',') }}
+
+log-facility={{ rocky_router_dns.log_facility }}
+log-dhcp
+
+
