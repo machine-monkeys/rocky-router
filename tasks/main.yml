@@ -1,3 +1,32 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for machinemonkeys.rocky_router
+- name: Ensure firewalld and NetworkManager are present
+  ansible.builtin.dnf:
+    name:
+      - firewalld
+      - NetworkManager
+    state: present
+
+- name: Add lan facing zone {{ rocky_router_fw.lan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    permanent: true
+    state: present
+  notify: Reload firewall
+
+- name: Allow ssh to {{ rocky_router_fw.lan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    service: ssh
+    immediate: true
+    permanent: true
+    state: enabled
+
+- name: Allow forward in {{ rocky_router_fw.lan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    forward: true
+    immediate: true
+    permanent: true
+    state: enabled
