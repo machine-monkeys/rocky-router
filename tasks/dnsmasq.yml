@@ -11,3 +11,8 @@
     immediate: true
     permanent: true
     state: enabled
+  notify: Reload firewall
+
+- name: Copy template for local dns server configurations
+
+- name: Update local dhcp dns-server configuration to {{ rocky_router_ip.addr }}
