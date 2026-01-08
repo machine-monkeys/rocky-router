@@ -1,3 +1,54 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # defaults file for machinemonkeys.rocky_router
+
+# Enable/Disable features
+rocky_router_features:
+  dnsmasq: false
+  wan_ssh: false
+  wiregaurd: false
+  dns_blocklist: false
+  fail2ban: false
+  port_forwarding: false
+
+# IP Info
+rocky_router_ip:
+  addr: ""
+  prefix: ""
+
+# Network Interfaces 
+rocky_router_ifs:
+  wan: ""
+  lan_bridge: ""
+  bridge_slaves: []
+
+# Firewalld 
+rocky_router_fw:
+  lan_zone: lan
+  wan_zone: wan
+  policy: "lan-to-wan"
+
+# Local DHCP 
+rocky_router_dhcp:
+  start_ip: ""
+  end_ip: ""
+  lease_time: "24h"
+
+# DNF automatic 
+rocky_router_dnf_auto:
+  timer: "dnf-automatic-install.timer"
+  on_calendar: "Sat *-*-* 00:00:00"
+
+# Local DNS
+rocky_router_dns:
+  servers: []
+  local_domain: home.arpa
+
+# Wan SSH
+rocky_router_ssh:
+  wan_port: ""
+  wan_allowed_users: []
+  wan_permit_passwords: "no"
+  wan_permit_keys: "yes"
+  banner_file: ""
+  banner_text: ""

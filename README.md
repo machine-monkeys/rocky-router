@@ -15,43 +15,48 @@ Role Variables
 --------------
 
 ```yaml
-# Core variable dictionary
-rocky_router:
-  # IP info
-  prefixlen: "24"
-  lan_ip: "192.168.10.1"
-  # Netowrk Interfaces
-  wan_if: eno1
-  bridge_if: br0
-  lan_ifs: [enp1s0, enp2s0]
-  # Firewall
+rocky_router_features:
+  dnsmasq: false
+  wan_ssh: false
+  wiregaurd: false
+  dns_blocklist: false
+  fail2ban: false
+  port_forwarding: false
+
+rocky_router_ip:
+  addr: ""
+  prefix: ""
+
+rocky_router_ifs:
+  wan: ""
+  lan_bridge: ""
+  bridge_slaves: []
+
+rocky_router_fw:
   lan_zone: lan
   wan_zone: wan
-  # DNS
-  dns_servers: ["8.8.8.8", "8.8.4.4"]
-  local_domain: local.arpa
-  # DHCP
-  dhcp_start_ip: "192.168.10.50"
-  dhcp_end_ip: "192.168.10.254"
-  dhcp_lease_time: "24h"
-  # DNF Automatic updates
-  dnf_auto_timer: dnf-automatic-install.timer
-  dnf_auto_frequency: "Sat *-*-* 00:00:00"
-  # Additional features
-  wan_ssh_enabled: false
-  wiregaurd_enabled: false
-  dns_blocklist_enabled: false
-  fail2ban_enabled: false
-  port_forwarding_enabled: false
+  policy: "lan-to-wan"
 
-# SSH variable dictionary
+rocky_router_dhcp:
+  start_ip: ""
+  end_ip: ""
+  lease_time: "24h"
+
+rocky_router_dnf_auto:
+  timer: "dnf-automatic-install.timer"
+  on_calendar: "Sat *-*-* 00:00:00"
+
+rocky_router_dns:
+  servers: []
+  local_domain: home.arpa
+
 rocky_router_ssh:
-  wan_port: "23432"
-  wan_allowed_users: ["rruser"]
+  wan_port: ""
+  wan_allowed_users: []
   wan_permit_passwords: "no"
   wan_permit_keys: "yes"
-  banner_file: "/etc/ssh/banner"
-  banner_text: "Authorized Users Only. Connections subject to monitoring."
+  banner_file: ""
+  banner_text: ""
 ```
 
 Dependencies
