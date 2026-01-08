@@ -33,6 +33,8 @@ rocky_router_dhcp:
   start_ip: ""
   end_ip: ""
   lease_time: "24h"
+  lease_file: "/var/lib/dnsmasq/dnsmasq.leases"
+  log_facility: "/var/log/dnsmasq.log"
 
 # DNF automatic 
 rocky_router_dnf_auto:
@@ -43,6 +45,14 @@ rocky_router_dnf_auto:
 rocky_router_dns:
   servers: []
   local_domain: home.arpa
+  directives:
+    - "no-resolv"
+    - "bogus-priv"
+    - "expand-hosts"
+    - "domain-needed"
+    - "log-queries"
+    - "log-async=50"
+    - "cache-size=1000"
 
 # Wan SSH
 rocky_router_ssh:
