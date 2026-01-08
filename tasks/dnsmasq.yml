@@ -1,0 +1,13 @@
+---
+- name: Ensure dnsmasq is present
+  ansible.builtin.dnf:
+    name: dnsmasq
+    state: present
+
+- name: Allow DNS in {{ rocky_router_fw.lan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    service: dns
+    immediate: true
+    permanent: true
+    state: enabled
