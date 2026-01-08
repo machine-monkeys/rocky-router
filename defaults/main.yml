@@ -25,8 +25,13 @@ rocky_router_ifs:
 # Firewalld 
 rocky_router_fw:
   lan_zone: lan
+  lan_services: []
   wan_zone: wan
+  wan_icmp_block: false
+  wan_target: "REJECT"
+  wan_services: []
   policy: "lan-to-wan"
+  policy_target: "ACCEPT"
 
 # Local DHCP 
 rocky_router_dhcp:
