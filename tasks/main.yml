@@ -47,7 +47,6 @@
   ansible.posix.firewalld:
     zone: "{{ rocky_router_fw.lan_zone }}"
     interface: "{{ rocky_router_ifs.lan_bridge }}"
-    immediate: true
     permanent: true
     state: present
   notify: Reload firewall
@@ -100,7 +99,6 @@
   ansible.posix.firewalld:
     zone: "{{ rocky_router_fw.wan_zone }}"
     interface: "{{ rocky_router_ifs.wan }}"
-    immediate: true
     permanent: true
     state: present
   notify: Reload firewall
