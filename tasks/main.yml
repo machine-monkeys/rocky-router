@@ -16,10 +16,41 @@
   notify: Reload firewall
 
 - name: Setup bridge interface {{ rocky_router_ifs.lan_bridge }}
+  community.general.nmcli:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    conn_name: "{{ rocky_router_ifs.lan_bridge }}"
+    ifname: "{{ rocky_router_ifs.lan_bridge }}"
+    type: bridge
+    stp: "{{ rocky_router_ifs.bridge_stp }}"
+    method4: manual
+    method6: ignore
+    ip4: "{{ rocky_router_ip.addr }}/{{ rocky_router_ip.prefixlen }}"
+    autoconnect: true
+    autoconnect_priority: 100
+    never_default4: true
+    dns4_search: "{{ rocky_router_dns.local_domain }}"
+    state: present
+  notify: LAN UP
 
-- name: Setup bridge slave-interfaces 
+- name: Setup bridge slave-interfaces
+  community.general.nmcli:
+    zone: ""
+    conn_name: "{{ rocky_router_ifs.lan_bridge }}-{{ item }}"
+    ifname: "{{ item }}"
+    type: bridge-slave
+    master: "{{ rocky_router_ifs.lan_bridge }}"
+    autoconnect: true
+    state: present
+  loop: "{{ rocky_router_ifs.bridge_slaves }}"
 
 - name: Add bridge interface to zone {{ rocky_router_fw.lan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    interface: "{{ rocky_router_ifs.lan_bridge }}"
+    immediate: true
+    permanent: true
+    state: present
+  notify: Reload firewall
 
 - name: Allow ssh in zone {{ rocky_router_fw.lan_zone }}
   ansible.posix.firewalld:
@@ -30,6 +61,12 @@
     state: enabled
 
 - name: Allow dhcp in zone {{ rocky_router_fw.lan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    service: dhcp
+    immediate: true
+    permanent: true
+    state: enabled
 
 - name: Allow forward in zone {{ rocky_router_fw.lan_zone }}
   ansible.posix.firewalld:
@@ -40,18 +77,65 @@
     state: enabled
 
 - name: Add wan facing zone {{ rocky_router_fw.wan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    permanent: true
+    state: present
+  notify: Reload firewall
 
-- name: Setup wan interface {{ rocky_router_ifs.wan_zone }}
+- name: Setup wan interface {{ rocky_router_ifs.wan }}
+  community.general.nmcli:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    ifname: "{{ rocky_router_ifs.wan }}"
+    conn_name: "{{ rocky_router_ifs.wan }}"
+    type: ethernet
+    method4: auto
+    method6: auto
+    autoconnect: true
+    autoconnect_priority: 100
+    state: present
+  notify: WAN UP
 
 - name: Add wan interface to zone {{ rocky_router_fw.wan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    interface: "{{ rocky_router_ifs.wan }}"
+    immediate: true
+    permanent: true
+    state: present
+  notify: Reload firewall
+
+- name: Set wan target in zone {{ rocky_router_fw.wan_zone }} {{ rocky_router_fw.wan_target}}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    target: "{{ rocky_router_fw.wan_target }}"
+    state: enabled
+    permanent: true
+    immediate: true
 
 - name: Deny forward in zone {{ rocky_router_fw.wan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    forward: false
+    state: enabled
+    permanent: true
+    immediate: true
 
 - name: Allow masquerade in zone {{ rocky_router_fw.wan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    masquerade: true
+    state: enabled
+    permanent: true
+    immediate: true
 
 - name: Allow icmp blocks in zone {{ rocky_router_fw.wan_zone }}
-
-- name: Allow specified services in zone {{ rocky_router_fw.wan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    icmp_block: "{{ rocky_router_fw.wan_icmp_block }}"
+    state: enabled
+    permanent: true
+    immediate: true
 
 - name: Check existing firewalld policies
   ansible.builtin.command: firewall-cmd --get-policies
@@ -59,15 +143,59 @@
   register: fw_policies
 
 - name: Add zone-to-zone firewall policy {{ rocky_router_fw.policy }}
+  ansible.builtin.command: firewall-cmd --permanent --new-policy={{ rocky_router_fw.policy }}
+  changed_when: true
+  when: rocky_router_fw.policy not in fw_policies.stdout
+
+- name: Check existing policy rules
+  ansible.builtin.command: firewall-cmd --info-policy={{ rocky_router_fw.policy }}
+  changed_when: false
+  register: policy_info
 
 - name: Set policy ingress zone {{ rocky_router_fw.lan_zone }}
+  ansible.builtin.command: firewall-cmd --policy={{ rocky_router_fw.policy }} --add-ingress-zone={{ rocky_router_fw.lan_zone }} --permanent
+  changed_when: true
+  when: policy_info.stdout is search('ingress-zones:.*' ~ rocky_router_fw.lan_zone)
 
 - name: Set policy egress zone {{ rocky_router_fw.wan_zone }}
+  ansible.builtin.command: firewall-cmd --policy={{ rocky_router_fw.policy }} --add-egress-zone={{ rocky_router_fw.wan_zone }} --permanent
+  changed_when: true
+  when: policy_info.stdout is search('egress-zones:.*' ~ rocky_router_fw.wan_zone)
 
 - name: Set policy target {{ rocky_router_fw.policy_target }}
+  ansible.builtin.command: firewall-cmd --policy={{ rocky_router_fw.policy }} --set-target={{ rocky_router_fw.policy_target }} --permanent
+  changed_when: true
+  when: policy_info.stdout is search('target:.*' ~ rocky_router_fw.policy_target)
 
 - name: Copy template for local dhcp server configurations
+  ansible.builtin.template:
+    src: "50-rocky-router-dhcp.conf.j2"
+    dest: "/etc/dnsmasq.d/50-rocky-router-dhcp.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload dnsmasq
 
 - name: Set up log rotation for dnsmasq
+  ansible.builtin.copy:
+    content: |
+      /var/log/dnsmasq.log {
+          size {{ rocky_router_logrotate.dnsmasq_size }}
+          rotate {{ rocky_router_logrotate.dnsmasq_count }}
+          compress
+          missingok
+          notifempty
+          copytruncate
+      }
+    path: /etc/logrotate.d/dnsmasq
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Enable ipv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    state: present
+    sysctl_set: true
+    reload: true
