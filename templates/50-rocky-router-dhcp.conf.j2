@@ -9,7 +9,7 @@ dhcp-leasefile={{ rocky_router_dhcp.lease_file }}
 dhcp-option=option:router,{{ rocky_router_ip.addr }}
 dhcp-option=option:dns-server,{{ rocky_router_dns.servers | join(',') }}
 
-log-facility={{ rocky_router_dns.log_facility }}
+log-facility={{ rocky_router_dhcp.log_facility }}
 log-dhcp
 
 
