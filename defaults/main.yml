@@ -4,7 +4,7 @@
 
 # Enable/Disable features
 rocky_router_features:
-  dnsmasq: false
+  local_dns: false
   wan_ssh: false
   wiregaurd: false
   dns_blocklist: false
@@ -14,7 +14,7 @@ rocky_router_features:
 # IP Info
 rocky_router_ip:
   addr: ""
-  prefix: ""
+  prefixlen: ""
 
 # Network Interfaces 
 rocky_router_ifs:
