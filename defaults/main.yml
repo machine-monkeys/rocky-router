@@ -68,8 +68,8 @@ rocky_router_logrotate:
 # Wan SSH
 rocky_router_ssh:
   wan_port: ""
-  wan_allowed_users: []
-  wan_permit_passwords: "no"
-  wan_permit_keys: "yes"
+  wan_users: []
+  wan_password_auth: "no"
+  wan_key_auth: "yes"
   banner_file: ""
   banner_text: ""
