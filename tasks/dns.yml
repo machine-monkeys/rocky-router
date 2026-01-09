@@ -1,0 +1,48 @@
+---
+- name: Ensure dnsmasq is present
+  ansible.builtin.dnf:
+    name: dnsmasq
+    state: present
+
+- name: Allow DNS in {{ rocky_router_fw.lan_zone }}
+  ansible.posix.firewalld:
+    zone: "{{ rocky_router_fw.lan_zone }}"
+    service: dns
+    immediate: true
+    permanent: true
+    state: enabled
+  notify: Reload firewall
+
+- name: Copy template for local dns server configurations
+  ansible.builtin.template:
+    src: "60-rocky-router-dns.conf.j2"
+    dest: "/etc/dnsmasq.d/60-rocky-router-dns.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload dnsmasq
+
+- name: Update local dhcp dns-server configuration to {{ rocky_router_ip.addr }}
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/50-rocky-router-dhcp.conf"
+    regexp: '^dhcp-option=option:dns-server'
+    line: "dhcp-option=option:dns-server,{{ rocky_router_ip.addr }}"
+    create: true
+  notify: Reload dnsmasq
+
+- name: Setup wan interface {{ rocky_router_ifs.wan }}
+  community.general.nmcli:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    ifname: "{{ rocky_router_ifs.wan }}"
+    conn_name: "{{ rocky_router_ifs.wan }}"
+    type: ethernet
+    method4: auto
+    method6: auto
+    dns4: ["127.0.0.1"]
+    dns4_ignore_auto: true
+    dns6: ["::1"]
+    dns6_ignore_auto: true
+    autoconnect: true
+    autoconnect_priority: 100
+    state: present
+  notify: LAN UP

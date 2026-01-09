@@ -4,7 +4,7 @@
 
 # Enable/Disable features
 rocky_router_features:
-  dnsmasq: false
+  local_dns: false
   wan_ssh: false
   wiregaurd: false
   dns_blocklist: false
@@ -14,21 +14,22 @@ rocky_router_features:
 # IP Info
 rocky_router_ip:
   addr: ""
-  prefix: ""
+  prefixlen: ""
 
 # Network Interfaces 
 rocky_router_ifs:
   wan: ""
   lan_bridge: ""
   bridge_slaves: []
+  bridge_stp: true
 
 # Firewalld 
 rocky_router_fw:
   lan_zone: lan
   lan_services: []
   wan_zone: wan
-  wan_icmp_block: false
-  wan_target: "REJECT"
+  wan_icmp_block: ""
+  wan_target: "%%REJECT%%"
   wan_services: []
   policy: "lan-to-wan"
   policy_target: "ACCEPT"
@@ -59,11 +60,16 @@ rocky_router_dns:
     - "log-async=50"
     - "cache-size=1000"
 
+# Logrotate
+rocky_router_logrotate:
+  dnsmasq_size: "100M"
+  dnsmasq_count: "5"
+
 # Wan SSH
 rocky_router_ssh:
   wan_port: ""
-  wan_allowed_users: []
-  wan_permit_passwords: "no"
-  wan_permit_keys: "yes"
+  wan_users: []
+  wan_password_auth: "no"
+  wan_key_auth: "yes"
   banner_file: ""
   banner_text: ""
