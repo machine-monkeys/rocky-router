@@ -109,7 +109,7 @@
     target: "{{ rocky_router_fw.wan_target }}"
     state: enabled
     permanent: true
-    immediate: true
+  notify: Reload firewall
 
 - name: Deny forward in zone {{ rocky_router_fw.wan_zone }}
   ansible.posix.firewalld:
