@@ -27,6 +27,7 @@
     path: "/etc/dnsmasq.d/50-rocky-router-dhcp.conf"
     regexp: '^dhcp-option=option:dns-server'
     line: "dhcp-option=option:dns-server,{{ rocky_router_ip.addr }}"
+    create: true
   notify: Reload dnsmasq
 
 - name: Setup wan interface {{ rocky_router_ifs.wan }}
