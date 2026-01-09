@@ -1,0 +1,8 @@
+Port 22
+Port {{ rocky_router_ssh.wan_port }}
+
+Match Localport {{ rocky_router_ssh.wan_port }}
+    Allowusers {{ rocky_router_ssh.wan_users | join(' ') }}
+    PasswordAuthentication {{ rocky_router_ssh.wan_password_auth }}
+    PubkeyAuthentication {{ rocky_router_ssh.wan_key_auth }}
+    PermitRootLogin no
