@@ -20,9 +20,28 @@
     owner: root
     group: root
     mode: "0644"
+  notify: Reload dnsmasq
 
 - name: Update local dhcp dns-server configuration to {{ rocky_router_ip.addr }}
   ansible.builtin.lineinfile:
     path: "/etc/dnsmasq.d/50-rocky-router-dhcp.conf"
     regexp: '^dhcp-option=option:dns-server'
     line: "dhcp-option=option:dns-server,{{ rocky_router_ip.addr }}"
+  notify: Reload dnsmasq
+
+- name: Setup wan interface {{ rocky_router_ifs.wan }}
+  community.general.nmcli:
+    zone: "{{ rocky_router_fw.wan_zone }}"
+    ifname: "{{ rocky_router_ifs.wan }}"
+    conn_name: "{{ rocky_router_ifs.wan }}"
+    type: ethernet
+    method4: auto
+    method6: auto
+    dns4: ["127.0.0.1"]
+    dns4_ignore_auto: true
+    dns6: ["::1"]
+    dns6_ignore_auto: true
+    autoconnect: true
+    autoconnect_priority: 100
+    state: present
+  notify: LAN UP
