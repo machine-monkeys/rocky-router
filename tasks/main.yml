@@ -38,7 +38,7 @@
     conn_name: "{{ rocky_router_ifs.lan_bridge }}-{{ item }}"
     ifname: "{{ item }}"
     type: ethernet
-    slave-type: bridge
+    slave_type: bridge
     master: "{{ rocky_router_ifs.lan_bridge }}"
     autoconnect: true
     state: present
