@@ -13,7 +13,11 @@
     zone: "{{ rocky_router_fw.lan_zone }}"
     permanent: true
     state: present
-  notify: Reload firewall
+  register: lan_zone_result
+
+- name: Reload firewalld if zone was created/changed
+  ansible.builtin.command: firewall-cmd --reload
+  when: lan_zone_result.changed
 
 - name: Setup bridge interface {{ rocky_router_ifs.lan_bridge }}
   community.general.nmcli:
@@ -81,7 +85,11 @@
     zone: "{{ rocky_router_fw.wan_zone }}"
     permanent: true
     state: present
-  notify: Reload firewall
+  register: wan_zone_result
+
+- name: Reload firewalld if wan zone was created/changed
+  ansible.builtin.command: firewall-cmd --reload
+  when: wan_zone_result.changed
 
 - name: Setup wan interface {{ rocky_router_ifs.wan }}
   community.general.nmcli:
