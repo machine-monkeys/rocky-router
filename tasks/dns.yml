@@ -14,5 +14,15 @@
   notify: Reload firewall
 
 - name: Copy template for local dns server configurations
+  ansible.builtin.template:
+    src: "60-rocky-router-dns.conf.j2"
+    dest: "/etc/dnsmasq.d/60-rocky-router-dns.conf"
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Update local dhcp dns-server configuration to {{ rocky_router_ip.addr }}
+  ansible.builtin.lineinfile:
+    path: "/etc/dnsmasq.d/50-rocky-router-dhcp.conf"
+    regexp: '^dhcp-option=option:dns-server'
+    line: "dhcp-option=option:dns-server,{{ rocky_router_ip.addr }}"
