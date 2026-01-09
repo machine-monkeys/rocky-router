@@ -186,7 +186,7 @@
           notifempty
           copytruncate
       }
-    path: /etc/logrotate.d/dnsmasq
+    dest: /etc/logrotate.d/dnsmasq
     owner: root
     group: root
     mode: "0644"
