@@ -34,13 +34,20 @@ rocky_router_ifs:
 
 rocky_router_fw:
   lan_zone: lan
+  lan_services: []
   wan_zone: wan
+  wan_icmp_block: false
+  wan_target: "REJECT"
+  wan_services: []
   policy: "lan-to-wan"
+  policy_target: "ACCEPT"
 
 rocky_router_dhcp:
   start_ip: ""
   end_ip: ""
   lease_time: "24h"
+  lease_file: "/var/lib/dnsmasq/dnsmasq.leases"
+  log_facility: "/var/log/dnsmasq.log"
 
 rocky_router_dnf_auto:
   timer: "dnf-automatic-install.timer"
@@ -49,6 +56,14 @@ rocky_router_dnf_auto:
 rocky_router_dns:
   servers: []
   local_domain: home.arpa
+  directives:
+    - "no-resolv"
+    - "bogus-priv"
+    - "expand-hosts"
+    - "domain-needed"
+    - "log-queries"
+    - "log-async=50"
+    - "cache-size=1000"
 
 rocky_router_ssh:
   wan_port: ""
