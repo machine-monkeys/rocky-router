@@ -48,7 +48,7 @@
     zone: "{{ rocky_router_fw.lan_zone }}"
     interface: "{{ rocky_router_ifs.lan_bridge }}"
     permanent: true
-    state: present
+    state: enabled
   notify: Reload firewall
 
 - name: Allow ssh in zone {{ rocky_router_fw.lan_zone }}
@@ -100,7 +100,7 @@
     zone: "{{ rocky_router_fw.wan_zone }}"
     interface: "{{ rocky_router_ifs.wan }}"
     permanent: true
-    state: present
+    state: enabled
   notify: Reload firewall
 
 - name: Set wan target in zone {{ rocky_router_fw.wan_zone }} {{ rocky_router_fw.wan_target}}
