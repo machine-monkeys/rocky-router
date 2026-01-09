@@ -25,7 +25,7 @@ rocky_router_features:
 
 rocky_router_ip:
   addr: ""
-  prefix: ""
+  prefixlen: ""
 
 rocky_router_ifs:
   wan: ""
