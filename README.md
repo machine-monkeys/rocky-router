@@ -88,11 +88,9 @@ Example Playbook
   hosts: all
   become: yes
   vars_files:
-    - vars/sample.yml
-  tasks:
-    - name: Include rocky router role
-      ansible.builtin.include_role:
-        name: machinemonkeys.rocky_router
+    - vars/sample.yml # Copy/edit role vars to a vars file
+  roles:
+    role: machinemonkeys.rocky_router
 ```
 
 License
