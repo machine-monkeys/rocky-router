@@ -29,7 +29,7 @@ rocky_router_fw:
   lan_services: []
   wan_zone: wan
   wan_icmp_block: ""
-  wan_target: "REJECT"
+  wan_target: "%%REJECT%%"
   wan_services: []
   policy: "lan-to-wan"
   policy_target: "ACCEPT"
