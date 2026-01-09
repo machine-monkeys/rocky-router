@@ -21,13 +21,14 @@ rocky_router_ifs:
   wan: ""
   lan_bridge: ""
   bridge_slaves: []
+  bridge_stp: true
 
 # Firewalld 
 rocky_router_fw:
   lan_zone: lan
   lan_services: []
   wan_zone: wan
-  wan_icmp_block: false
+  wan_icmp_block: ""
   wan_target: "REJECT"
   wan_services: []
   policy: "lan-to-wan"
@@ -58,6 +59,11 @@ rocky_router_dns:
     - "log-queries"
     - "log-async=50"
     - "cache-size=1000"
+
+# Logrotate
+rocky_router_logrotate:
+  dnsmasq_size: "100M"
+  dnsmasq_count: "5"
 
 # Wan SSH
 rocky_router_ssh:
