@@ -199,3 +199,7 @@
     state: present
     sysctl_set: true
     reload: true
+
+- name: Include DNS local server tasks
+  ansible.builtin.include_tasks: dns.yml
+  when: rocky_router_features.local_dns
