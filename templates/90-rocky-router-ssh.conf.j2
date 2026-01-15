@@ -1,5 +1,7 @@
 Port 22
 Port {{ rocky_router_ssh.wan_port }}
+Banner {{ rocky_router_ssh.banner_file }}
+
 
 Match Localport {{ rocky_router_ssh.wan_port }}
     Allowusers {{ rocky_router_ssh.wan_users | join(' ') }}
