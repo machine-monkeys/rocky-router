@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # handlers file for machinemonkeys.rocky_router
 - name: Reload firewall
@@ -8,6 +8,11 @@
 - name: Reload dnsmasq
   ansible.builtin.service:
     name: dnsmasq
+    state: reloaded
+
+- name: Reload ssh
+  ansible.builtin.service:
+    name: ssh
     state: reloaded
 
 - name: LAN UP
