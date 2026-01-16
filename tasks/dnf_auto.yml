@@ -51,6 +51,6 @@
 - name: Start and enable dnf automatic timer {{ rocky_router_dnf_auto.timer }}
   tags: dnf_auto
   ansible.builtin.systemd:
-    name: {{ rocky_router_dnf_auto.timer }}
+    name: "{{ rocky_router_dnf_auto.timer }}"
     state: started
     enabled: true
