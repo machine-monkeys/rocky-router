@@ -15,6 +15,10 @@
     name: sshd
     state: reloaded
 
+- name: Reload daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+
 - name: LAN UP
   community.general.nmcli:
     conn_name: "{{ rocky_router_ifs.lan_bridge }}"
