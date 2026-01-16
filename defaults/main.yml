@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # defaults file for machinemonkeys.rocky_router
 
@@ -16,14 +16,14 @@ rocky_router_ip:
   addr: ""
   prefixlen: ""
 
-# Network Interfaces 
+# Network Interfaces
 rocky_router_ifs:
   wan: ""
   lan_bridge: ""
   bridge_slaves: []
   bridge_stp: true
 
-# Firewalld 
+# Firewalld
 rocky_router_fw:
   lan_zone: lan
   lan_services: []
@@ -34,7 +34,7 @@ rocky_router_fw:
   policy: "lan-to-wan"
   policy_target: "ACCEPT"
 
-# Local DHCP 
+# Local DHCP
 rocky_router_dhcp:
   start_ip: ""
   end_ip: ""
@@ -42,10 +42,13 @@ rocky_router_dhcp:
   lease_file: "/var/lib/dnsmasq/dnsmasq.leases"
   log_facility: "/var/log/dnsmasq.log"
 
-# DNF automatic 
+# DNF automatic
 rocky_router_dnf_auto:
   timer: "dnf-automatic-install.timer"
   on_calendar: "Sat *-*-* 00:00:00"
+  reboot_option: "when-needed"
+  reboot_command: "\"shutdown -r +1\" 'Rebooting system to apply updates'"
+  emit_via: "stdio, motd"
 
 # Local DNS
 rocky_router_dns:
