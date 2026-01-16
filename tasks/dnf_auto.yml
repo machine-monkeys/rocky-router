@@ -54,4 +54,3 @@
     name: {{ rocky_router_dnf_auto.timer }}
     state: started
     enabled: true
-    
