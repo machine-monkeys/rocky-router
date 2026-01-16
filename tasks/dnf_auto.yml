@@ -5,10 +5,10 @@
     name: dnf-automatic
     state: present
 
-- name: Create override directory /etc/systemd/system/dnf-automatic.timer.d
+- name: Create override directory /etc/systemd/system/{{ rocky_router_dnf_auto.timer }}.d
   tags: dnf_auto
   ansible.builtin.file:
-    path: /etc/systemd/system/dnf-automatic.timer.d
+    path: /etc/systemd/system/{{ rocky_router_dnf_auto.timer }}.d
     state: directory
     owner: root
     group: root
@@ -21,7 +21,7 @@
       [Timer]
       OnCalendar=
       OnCalendar={{ rocky_router_dnf_auto.on_calendar }}
-    dest: /etc/systemd/system/dnf-automatic.timer.d/override.conf
+    dest: /etc/systemd/system/{{ rocky_router_dnf_auto.timer }}.d/override.conf
     owner: root
     group: root
     mode: "0644"
