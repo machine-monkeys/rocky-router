@@ -1,5 +1,6 @@
 ---
 - name: Copy ssh config template
+  tags: ssh
   ansible.builtin.template:
     src: 90-rocky-router-ssh.conf.j2
     dest: /etc/ssh/sshd_config.d/90-rocky-router-ssh.conf
@@ -9,6 +10,7 @@
   notify: Reload ssh
 
 - name: Set SSH seliux context for port {{ rocky_router_ssh.wan_port }}
+  tags: ssh
   community.general.seport:
     ports:
       - "{{ rocky_router_ssh.wan_port }}"
@@ -16,6 +18,7 @@
     setype: ssh_port_t
 
 - name: Allow port in wan zone {{ rocky_router_fw.wan_zone }}
+  tags: ssh
   ansible.posix.firewalld:
     zone: "{{ rocky_router_fw.wan_zone }}"
     port: "{{ rocky_router_ssh.wan_port }}/tcp"

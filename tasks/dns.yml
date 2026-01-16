@@ -1,10 +1,12 @@
 ---
 - name: Ensure dnsmasq is present
+  tags: dns
   ansible.builtin.dnf:
     name: dnsmasq
     state: present
 
 - name: Allow DNS in {{ rocky_router_fw.lan_zone }}
+  tags: dns
   ansible.posix.firewalld:
     zone: "{{ rocky_router_fw.lan_zone }}"
     service: dns
@@ -14,6 +16,7 @@
   notify: Reload firewall
 
 - name: Copy template for local dns server configurations
+  tags: dns
   ansible.builtin.template:
     src: "60-rocky-router-dns.conf.j2"
     dest: "/etc/dnsmasq.d/60-rocky-router-dns.conf"
@@ -23,6 +26,7 @@
   notify: Reload dnsmasq
 
 - name: Update local dhcp dns-server configuration to {{ rocky_router_ip.addr }}
+  tags: dns
   ansible.builtin.lineinfile:
     path: "/etc/dnsmasq.d/50-rocky-router-dhcp.conf"
     regexp: '^dhcp-option=option:dns-server'
@@ -31,6 +35,7 @@
   notify: Reload dnsmasq
 
 - name: Setup wan interface {{ rocky_router_ifs.wan }}
+  tags: dns
   community.general.nmcli:
     zone: "{{ rocky_router_fw.wan_zone }}"
     ifname: "{{ rocky_router_ifs.wan }}"
