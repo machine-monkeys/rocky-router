@@ -71,5 +71,3 @@ rocky_router_ssh:
   wan_users: []
   wan_password_auth: "no"
   wan_key_auth: "yes"
-  banner_file: ""
-  banner_text: ""
