@@ -1,0 +1,57 @@
+---
+- name: Install dnf automatic package
+  tags: dnf_auto
+  ansible.builtin.dnf:
+    name: dnf-automatic
+    state: present
+
+- name: Create override directory /etc/systemd/system/dnf-automatic.timer.d
+  tags: dnf_auto
+  ansible.builtin.file:
+    path: /etc/systemd/system/dnf-automatic.timer.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Override dnf automatic OnCalendar {{ rocky_router_dnf_auto.on_calendar }}
+  tags: dnf_auto
+  ansible.builtin.copy:
+    content: |
+      [Timer]
+      OnCalendar=
+      OnCalendar={{ rocky_router_dnf_auto.on_calendar }}
+    dest: /etc/systemd/system/dnf-automatic.timer.d/override.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload daemon
+
+- name: Set reboot directive to {{ rocky_router_dnf_auto.reboot_option }}
+  tags: dnf_auto
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: "^reboot = "
+    line: "reboot = {{ rocky_router_dnf_auto.reboot_option }}"
+
+- name: Set reboot command directive to {{ rocky_router_dnf_auto.reboot_command }}
+  tags: dnf_auto
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: "^reboot_command ="
+    line: "reboot_command = {{ rocky_router_dnf_auto.reboot_command }}"
+
+- name: Set emit_via directive to {{ rocky_router_dnf_auto.emit_via }}"
+  tags: dnf_auto
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: "^emit_via = "
+    line: "emit_via = {{ rocky_router_dnf_auto.emit_via }}"
+
+- name: Start and enable dnf automatic timer {{ rocky_router_dnf_auto.timer }}
+  tags: dnf_auto
+  ansible.builtin.systemd:
+    name: {{ rocky_router_dnf_auto.timer }}
+    state: started
+    enabled: true
+    
