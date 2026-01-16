@@ -209,6 +209,11 @@
     sysctl_set: true
     reload: true
 
+- name: Include DNF automatic tasks
+  tags: dnf_auto
+  ansible.builtin.include_tasks: dnf_auto.yml
+  when: rocky_router_features.dnf_auto
+
 - name: Include DNS local server tasks
   tags: dns
   ansible.builtin.include_tasks: dns.yml
