@@ -46,10 +46,10 @@ rocky_router_dhcp:
 # DNF automatic
 rocky_router_dnf_auto:
   timer: "dnf-automatic-install.timer"
-  on_calendar: "Sat *-*-* 00:00:00"
+  on_calendar: "Mon *-*-* 00:00:00"
   reboot_option: "when-needed"
-  reboot_command: "\"shutdown -r +1\" 'Rebooting system to apply updates'"
-  emit_via: "stdio, motd"
+  reboot_command: "\"shutdown -r +5\" 'Rebooting after applying package updates'"
+  emit_via: "stdio"
 
 # Local DNS
 rocky_router_dns:
