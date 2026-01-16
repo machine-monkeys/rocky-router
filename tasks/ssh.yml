@@ -1,4 +1,10 @@
 ---
+- name: Install selinux management utils
+  tags: ssh
+  ansible.builtin.dnf:
+    name: policycoreutils-python-utils
+    state: present
+
 - name: Copy ssh config template
   tags: ssh
   ansible.builtin.template:
