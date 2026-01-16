@@ -208,5 +208,12 @@
     reload: true
 
 - name: Include DNS local server tasks
+  tags: dns
   ansible.builtin.include_tasks: dns.yml
   when: rocky_router_features.local_dns
+
+- name: Include SSH WAN tasks
+  tags: ssh
+  ansible.builtin.include_tasks: ssh.yml
+  when: rocky_router_features.wan_ssh
+
