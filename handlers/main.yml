@@ -12,7 +12,7 @@
 
 - name: Reload ssh
   ansible.builtin.service:
-    name: ssh
+    name: sshd
     state: reloaded
 
 - name: LAN UP
