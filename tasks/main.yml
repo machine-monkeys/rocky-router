@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 # tasks file for machinemonkeys.rocky_router
 - name: Ensure firewalld and NetworkManager are present
@@ -13,11 +13,12 @@
     zone: "{{ rocky_router_fw.lan_zone }}"
     permanent: true
     state: present
-  register: lan_zone_result
+  register: rocky_router_lan_zone_result
 
 - name: Reload firewalld if zone was created/changed
   ansible.builtin.command: firewall-cmd --reload
-  when: lan_zone_result.changed
+  when: rocky_router_lan_zone_result.changed
+  changed_when: true
 
 - name: Setup bridge interface {{ rocky_router_ifs.lan_bridge }}
   community.general.nmcli:
@@ -85,11 +86,12 @@
     zone: "{{ rocky_router_fw.wan_zone }}"
     permanent: true
     state: present
-  register: wan_zone_result
+  register: rocky_router_wan_zone_result
 
 - name: Reload firewalld if wan zone was created/changed
   ansible.builtin.command: firewall-cmd --reload
-  when: wan_zone_result.changed
+  when: rocky_router_wan_zone_result.changed
+  changed_when: true
 
 - name: Setup wan interface {{ rocky_router_ifs.wan }}
   community.general.nmcli:
@@ -112,7 +114,7 @@
     state: enabled
   notify: Reload firewall
 
-- name: Set wan target in zone {{ rocky_router_fw.wan_zone }} {{ rocky_router_fw.wan_target}}
+- name: Set target in wan zone {{ rocky_router_fw.wan_target }}
   ansible.posix.firewalld:
     zone: "{{ rocky_router_fw.wan_zone }}"
     target: "{{ rocky_router_fw.wan_target }}"
@@ -147,32 +149,32 @@
 - name: Check existing firewalld policies
   ansible.builtin.command: firewall-cmd --get-policies
   changed_when: false
-  register: fw_policies
+  register: rocky_router_fw_policies
 
 - name: Add zone-to-zone firewall policy {{ rocky_router_fw.policy }}
   ansible.builtin.command: firewall-cmd --permanent --new-policy={{ rocky_router_fw.policy }}
   changed_when: true
-  when: rocky_router_fw.policy not in fw_policies.stdout
+  when: rocky_router_fw.policy not in rocky_router_fw_policies.stdout
 
 - name: Check existing policy rules
   ansible.builtin.command: firewall-cmd --info-policy={{ rocky_router_fw.policy }}
   changed_when: false
-  register: policy_info
+  register: rocky_router_policy_info
 
 - name: Set policy ingress zone {{ rocky_router_fw.lan_zone }}
   ansible.builtin.command: firewall-cmd --policy={{ rocky_router_fw.policy }} --add-ingress-zone={{ rocky_router_fw.lan_zone }} --permanent
   changed_when: true
-  when: policy_info.stdout is search('ingress-zones:.*' ~ rocky_router_fw.lan_zone)
+  when: rocky_router_policy_info.stdout is search('ingress-zones:.*' ~ rocky_router_fw.lan_zone)
 
 - name: Set policy egress zone {{ rocky_router_fw.wan_zone }}
   ansible.builtin.command: firewall-cmd --policy={{ rocky_router_fw.policy }} --add-egress-zone={{ rocky_router_fw.wan_zone }} --permanent
   changed_when: true
-  when: policy_info.stdout is search('egress-zones:.*' ~ rocky_router_fw.wan_zone)
+  when: rocky_router_policy_info.stdout is search('egress-zones:.*' ~ rocky_router_fw.wan_zone)
 
 - name: Set policy target {{ rocky_router_fw.policy_target }}
   ansible.builtin.command: firewall-cmd --policy={{ rocky_router_fw.policy }} --set-target={{ rocky_router_fw.policy_target }} --permanent
   changed_when: true
-  when: policy_info.stdout is search('target:.*' ~ rocky_router_fw.policy_target)
+  when: rocky_router_policy_info.stdout is search('target:.*' ~ rocky_router_fw.policy_target)
 
 - name: Copy template for local dhcp server configurations
   ansible.builtin.template:
@@ -216,4 +218,3 @@
   tags: ssh
   ansible.builtin.include_tasks: ssh.yml
   when: rocky_router_features.wan_ssh
-

@@ -32,6 +32,9 @@
     regexp: '^dhcp-option=option:dns-server'
     line: "dhcp-option=option:dns-server,{{ rocky_router_ip.addr }}"
     create: true
+    owner: root
+    group: root
+    mode: "0644"
   notify: Reload dnsmasq
 
 - name: Setup wan interface {{ rocky_router_ifs.wan }}
