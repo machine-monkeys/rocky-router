@@ -1,0 +1,10 @@
+enable-tftp
+tftp-root={{ rocky_router_ipxe.tftp_dir }}
+
+dhcp-match=set:efi64,option:client-arch,7
+dhcp-boot=tag:efi64,ipxe.efi
+dhcp-boot=undionly.kpxe
+
+dhcp-userclass=set:ipxe,iPXE
+dhcp-match=set:ipxe,175
+dhcp-boot=tag:ipxe,http://{{ rocky_router_ip.addr }}/menu.ipxe
