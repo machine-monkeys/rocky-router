@@ -1,0 +1,11 @@
+http {
+    server {
+        listen {{ rocky_router_ipxe.http_port }};
+        server_name {{ ansible_hostname }} {{ ansible_fqdn }};
+
+        location / {
+            root {{ rocky_router_ipxe.http_dir }};
+            try_files $uri =404;
+        }
+    }
+}
