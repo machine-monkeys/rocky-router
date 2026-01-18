@@ -1,0 +1,95 @@
+---
+- name: Install packages for ipxe build
+  tags: ipxe
+  ansible.builtin.dnf:
+    name:
+      - git
+      - aria2
+      - nginx
+      - gcc
+      - binutils
+      - make
+      - perl
+      - xz
+      - mtools
+    state: present
+
+- name: Create tftp root directory {{ rocky_router_ipxe.tftp_dir }}
+  tags: ipxe
+
+- name: Create ipxe parent directory for building source code
+  tags: ipxe
+
+- name: Git clone ipxe source code
+  tags: ipxe
+
+- name: Run ipxe make for BIOS build
+  tags: ipxe
+
+- name: Copy ipxe BIOS binary to {{ rocky_router_ipxe.tftp_dir }}
+
+- name: Run ipxe make for UEFI build
+  tags: ipxe
+
+- name: Copy ipxe UEFI binary to {{ rocky_router_ipxe.tftp_dir }}
+  tags: ipxe
+
+- name: Add correct selinux context recursively to {{ rocky_router_ipxe.tftp_dir }}
+  tags: ipxe
+
+- name: Restore selinux context recursively for {{ rocky_router_ipxe.tftp_dir }}
+  tags: ipxe
+
+- name: Copy nginx configuration template
+  tags: ipxe
+
+- name: Create http root directory {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Create rocky 9 repo directory in {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Download rocky 9 minimal iso with aria2c
+  tags: ipxe
+
+- name: Mount rocky 9 iso temporarily
+  tags: ipxe
+
+- name: Rsync rocky 9 iso tree to {{ rocky_router_ipxe.http_dir }}/rocky9
+  tags: ipxe
+
+- name: Unmount rocky 9 iso
+  tags: ipxe
+
+- name: Copy vmlinuz to {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Copy initrd.img to {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Copy kickstart template to {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Copy ipxe menu template to {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Add correct selinux context recursively to {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Restore selinux context recursively for {{ rocky_router_ipxe.http_dir }}
+  tags: ipxe
+
+- name: Copy dnsmasq pxeboot configuration template
+  tags: ipxe
+
+- name: Allow service tftp in zone {{ rocky_router_fw.lan_zone }}
+  tags: ipxe
+
+- name: Allow service http in zone {{ rocky_router_fw.lan_zone }}
+  tags: ipxe
+
+- name: Start nginx service
+  tags: ipxe
+
+- name: Start dnsmasq service
+  tags: ipxe
