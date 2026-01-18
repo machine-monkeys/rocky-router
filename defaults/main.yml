@@ -75,3 +75,14 @@ rocky_router_ssh:
   wan_users: []
   wan_password_auth: "no"
   wan_key_auth: "yes"
+
+# iPXE
+rocky_router_ipxe:
+  tftp_dir: /srv/tftpboot
+  http_dir: /srv/www
+  http_port: "80"
+  ansible_pubkey: ""
+  root_password: ""
+  admin_user: ""
+  admin_password: ""
+  admin_pubkey: ""
