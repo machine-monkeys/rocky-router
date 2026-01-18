@@ -1,0 +1,49 @@
+### Command Section ###
+
+# Basic Directives
+text
+keyboard us
+lang en_US.UTF-8
+timezone {{ timezone }} --utc
+network --bootproto=dhcp --device=link --activate
+
+# Accounts
+rootpw --iscrypted {{ rocky_router_ipxe.root_password }}
+user --name={{ rocky_router_ipxe.admin_user }} --groups=wheel --shell=/bin/bash --password={{ rocky_router_ipxe.admin_password }} --iscrypted
+{% if rocky_router_ipxe.admin_pubkey != "" %}
+sshkey --username {{ rocky_router_ipxe.admin_pubkey }}
+{% endif %}
+user --name=ansible
+{% if rocky_router_ipxe.ansible_pubkey != "" %}
+sshkey --username ansible {{ rocky_router_ipxe.ansible_pubkey }}
+{% endif %}
+
+# Disk Partitioning
+autopart
+zerombr
+clearpart --all --initlabel
+
+# Reboot After Kick
+reboot
+
+### Package Section
+%packages
+
+# Headless server
+@^server-product-environment
+
+%end
+
+# Post Script Section
+%post --interpreter=/bin/bash
+
+# Basic connectivity services
+systemctl enable NetworkManager
+systemctl enable sshd
+systemctl enable chrony
+
+# Add passwordless sudo
+echo "ansible ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ansible
+chmod 440 /etc/sudoers.d/ansible
+
+%end
