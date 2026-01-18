@@ -1,0 +1,21 @@
+#!ipxe
+dhcp
+
+:menu
+menu iPXE Boot menu
+item --default rocky9 Rocky 9 Minimal
+item shell iPXE Interactive Shell
+item exit Exit 
+choose --timeout 10000 target && goto ${target}
+
+:rocky9
+kernel http://{{ rocky_router_ip.addr }}/vmlinuz inst.repo=http://http://{{ rocky_router_ip.addr }}/rocky9 inst.ks=http://http://{{ rocky_router_ip.addr }}/rocky-minimal.ks
+initrd http://{{ rocky_router_ip.addr }}/initrd.img 
+boot
+
+:shell
+shell
+goto menu
+
+:exit
+exit
