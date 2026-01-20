@@ -78,6 +78,7 @@ rocky_router_ssh:
 
 # iPXE
 rocky_router_ipxe:
+  src_dir: /usr/local/src/ipxe
   tftp_dir: /srv/tftpboot
   http_dir: /srv/www
   http_port: "80"

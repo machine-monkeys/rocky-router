@@ -16,12 +16,28 @@
 
 - name: Create tftp root directory {{ rocky_router_ipxe.tftp_dir }}
   tags: ipxe
+  ansible.builtin.file:
+    path: "{{ rocky_router_ipxe.tftp_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
 
-- name: Create ipxe parent directory for building source code
+- name: Create ipxe directory for building source code
   tags: ipxe
+  ansible.builtin.file:
+    path: "{{ rocky_router_ipxe.src_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
 
 - name: Git clone ipxe source code
   tags: ipxe
+  ansible.builtin.git:
+    dest: "{{ rocky_router_ipxe.src_dir }}"
+    repo: "https://github.com/ipxe/ipxe.git"
+    version: master
 
 - name: Run ipxe make for BIOS build
   tags: ipxe
