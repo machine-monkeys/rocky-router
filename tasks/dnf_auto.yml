@@ -5,7 +5,7 @@
     name: dnf-automatic
     state: present
 
-- name: Create override directory /etc/systemd/system/{{ rocky_router_dnf_auto.timer }}.d
+- name: Create override directory for {{ rocky_router_dnf_auto.timer }}
   tags: dnf_auto
   ansible.builtin.file:
     path: /etc/systemd/system/{{ rocky_router_dnf_auto.timer }}.d
