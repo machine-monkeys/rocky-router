@@ -6,6 +6,7 @@
 rocky_router_features:
   dnf_auto: false
   local_dns: false
+  dhcp_hosts: false
   wan_ssh: false
   wiregaurd: false
   dns_blocklist: false
@@ -42,6 +43,12 @@ rocky_router_dhcp:
   lease_time: "24h"
   lease_file: "/var/lib/dnsmasq/dnsmasq.leases"
   log_facility: "/var/log/dnsmasq.log"
+
+# DHCP Managed Hosts
+rocky_router_hosts:
+  - mac: ""
+    hostname: ""
+    ip: ""
 
 # DNF automatic
 rocky_router_dnf_auto:
