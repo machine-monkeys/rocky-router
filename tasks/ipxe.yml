@@ -41,6 +41,10 @@
 
 - name: Run ipxe make for BIOS build
   tags: ipxe
+  ansible.builtin.command:
+    chdir: "{{ rocky_router_ipxe.src_dir }}/src"
+    cmd: make
+    creates: src/undionly.kpxe
 
 - name: Copy ipxe BIOS binary to {{ rocky_router_ipxe.tftp_dir }}
 
