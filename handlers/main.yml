@@ -10,7 +10,7 @@
     name: dnsmasq
     state: restarted
 
-- name: Restart ssh
+- name: Reload ssh
   ansible.builtin.service:
     name: sshd
     state: restarted
