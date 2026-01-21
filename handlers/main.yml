@@ -5,15 +5,15 @@
   ansible.builtin.command: firewall-cmd --reload
   changed_when: false
 
-- name: Reload dnsmasq
+- name: Restart dnsmasq
   ansible.builtin.service:
     name: dnsmasq
-    state: reloaded
+    state: restarted
 
-- name: Reload ssh
+- name: Restart ssh
   ansible.builtin.service:
     name: sshd
-    state: reloaded
+    state: restarted
 
 - name: Reload daemon
   ansible.builtin.systemd:

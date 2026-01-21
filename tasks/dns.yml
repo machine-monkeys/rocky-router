@@ -23,7 +23,7 @@
     owner: root
     group: root
     mode: "0644"
-  notify: Reload dnsmasq
+  notify: Restart dnsmasq
 
 - name: Update local dhcp dns-server configuration to {{ rocky_router_ip.addr }}
   tags: dns
@@ -35,7 +35,7 @@
     owner: root
     group: root
     mode: "0644"
-  notify: Reload dnsmasq
+  notify: Restart dnsmasq
 
 - name: Setup wan interface {{ rocky_router_ifs.wan }}
   tags: dns

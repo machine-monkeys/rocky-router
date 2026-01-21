@@ -13,7 +13,7 @@
     owner: root
     group: root
     mode: "0644"
-  notify: Reload ssh
+  notify: Restart ssh
 
 - name: Set SSH seliux context for port {{ rocky_router_ssh.wan_port }}
   tags: ssh

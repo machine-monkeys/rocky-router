@@ -183,7 +183,7 @@
     owner: root
     group: root
     mode: "0644"
-  notify: Reload dnsmasq
+  notify: Restart dnsmasq
 
 - name: Set up log rotation for dnsmasq
   ansible.builtin.copy:
