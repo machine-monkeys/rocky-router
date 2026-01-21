@@ -3,6 +3,7 @@
   tags: dhcp_hosts
   ansible.builtin.copy:
     content: |
+      host-record={{ rocky_router_ip.hostname }},{{ rocky_router_ip.hostname }}.{{ rocky_router_dns.local_domain }},{{ rocky_router_ip.addr }}
       {% for item in rocky_router_hosts %}
       dhcp-host={{ item.mac }},{{ item.hostname }},{{ item.ip }}
       {% endfor %}
