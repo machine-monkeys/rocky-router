@@ -16,6 +16,7 @@ rocky_router_features:
 # IP Info
 rocky_router_ip:
   addr: ""
+  hostname: ""
   prefixlen: ""
 
 # Network Interfaces
