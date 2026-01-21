@@ -219,7 +219,13 @@
   ansible.builtin.include_tasks: dns.yml
   when: rocky_router_features.local_dns
 
+- name: Include DHCP hosts tasks
+  tags: dhcp_hosts
+  ansible.builtin.include_tasks: dhcp_hosts.yml
+  when: rocky_router_features.dhcp_hosts
+
 - name: Include SSH WAN tasks
   tags: ssh
   ansible.builtin.include_tasks: ssh.yml
   when: rocky_router_features.wan_ssh
+

@@ -1,0 +1,13 @@
+---
+- name: Copy dhcp hosts to dnsmasq config
+  tags: dhcp_hosts
+  ansible.builtin.copy:
+    content: |
+      {% for item in rocky_router_hosts %}
+      dhcp-host={{ item.mac }},{{ item.hostname }},{{ item.ip }}
+      {% endfor %}
+    dest: /etc/dnsmasq.d/55-rocky-router-hosts.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload dnsmasq
