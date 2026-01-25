@@ -12,6 +12,7 @@
     state: present
 
 - name: Add user to libvirt group {{ rocky_router_hv.user }}
+  tags: hypervisor
   ansible.builtin.user:
     user: "{{ rocky_router_hv.user }}"
     groups: libvirt
