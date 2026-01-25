@@ -228,3 +228,9 @@
   tags: ssh
   ansible.builtin.include_tasks: ssh.yml
   when: rocky_router_features.wan_ssh
+
+- name: Include hypervisor tasks
+  tags: hypervisor
+  ansible.builtin.include_tasks: hypervisor.yml
+  when: rocky_router_features.hypervisor
+  

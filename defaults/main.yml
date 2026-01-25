@@ -96,3 +96,7 @@ rocky_router_ipxe:
   admin_user: ""
   admin_password: ""
   admin_pubkey: ""
+
+# Hypervisor
+rocky_router_hv:
+  user: ""

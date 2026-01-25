@@ -1,0 +1,25 @@
+---
+- name: Install packages for hypervisor setup
+  tags: hypervisor
+  ansible.builtin.dnf:
+    name:
+      - qemu-kvm
+      - libvirt
+      - virt-install
+      - qemu-img
+      - edk2-ovmf
+      - guestfs-tools
+    state: present
+
+- name: Add user to libvirt group {{ rocky_router_hv.user }}
+  ansible.builtin.user:
+    user: "{{ rocky_router_hv.user }}"
+    groups: libvirt
+    append: true
+
+- name: Start libvirtd daemon
+  tags: hypervisor
+  ansible.builtin.systemd:
+    name: libvirtd
+    state: started
+    enabled: true
