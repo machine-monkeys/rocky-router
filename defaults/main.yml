@@ -12,6 +12,7 @@ rocky_router_features:
   dns_blocklist: false
   fail2ban: false
   port_forwarding: false
+  hypervisor: false
 
 # IP Info
 rocky_router_ip:
