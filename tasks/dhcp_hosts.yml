@@ -1,12 +1,8 @@
 ---
 - name: Copy dhcp hosts to dnsmasq config
   tags: dhcp_hosts
-  ansible.builtin.copy:
-    content: |
-      host-record={{ rocky_router_ip.hostname }},{{ rocky_router_ip.hostname }}.{{ rocky_router_dns.local_domain }},{{ rocky_router_ip.addr }}
-      {% for item in rocky_router_hosts %}
-      dhcp-host={{ item.mac }},{{ item.hostname }},{{ item.ip }}
-      {% endfor %}
+  ansible.builtin.template:
+    src: 65-rocky-router-hosts.conf.j2
     dest: /etc/dnsmasq.d/65-rocky-router-hosts.conf
     owner: root
     group: root
